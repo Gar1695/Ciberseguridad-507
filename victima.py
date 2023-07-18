@@ -15,6 +15,9 @@ server_socket.bind(server_address)
 # Cantidad de clientes máximos que se pueden conectar:
 server_socket.listen(1)
 
+# Esperamos a recibir una conexión y aceptarla:
+client_socket, client_address = server_socket.accept()
+
 estado = True
 
 while estado:
@@ -42,4 +45,5 @@ while estado:
         client_socket.send(salida.encode())
     
     sleep(0.1)
+
 

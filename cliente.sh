@@ -1,39 +1,51 @@
 #!/bin/bash
 
-# Cambiar la siguiente línea por la dirección IP de la máquina Windows (servidor)
-SERVER_IP="direccion_ip_maquina_windows"
+# Función para leer datos del servidor y mostrarlos en la máquina cliente
+function ReadData_TCP {
+    param($Stream)
+    $Buffer = New-Object Byte[] 1024
+    $Encoding = New-Object System.Text.AsciiEncoding
 
-# Cambiar el siguiente puerto por el puerto en el que escucha el servidor en la máquina Windows
-SERVER_PORT=443
-
-# Función para enviar y recibir datos con el servidor
-function communicate_with_server {
-    # Establecer conexión con el servidor en la máquina Windows
-    exec 3<>/dev/tcp/"$SERVER_IP"/"$SERVER_PORT"
-
-    # Función para enviar comando al servidor y recibir resultados
-    function send_command {
-        echo "$1" >&3
-        cat <&3
+    $Data = ""
+    while ($Stream.DataAvailable) {
+        $ReadBytes = $Stream.Read($Buffer, 0, $Buffer.Length)
+        $Data += $Encoding.GetString($Buffer, 0, $ReadBytes)
     }
 
-    # Leer y enviar comandos desde el usuario al servidor
-    while read -p "Comando: " command; do
-        # Salir si el usuario ingresa "exit"
-        if [ "$command" == "exit" ]; then
-            send_command "$command"
-            break
-        fi
-
-        # Enviar el comando al servidor y recibir los resultados
-        result=$(send_command "$command")
-        echo "$result"
-    done
-
-    # Cerrar la conexión
-    exec 3>&-
+    Write-Output $Data
 }
 
-# Iniciar la comunicación con el servidor
-communicate_with_server
+# Dirección IP y Puerto del servidor
+$serverIP = "IP_DEL_SERVIDOR"
+$serverPort = 443
+
+# Establecer conexión con el servidor
+$client = New-Object System.Net.Sockets.TcpClient
+$client.Connect($serverIP, $serverPort)
+$stream = $client.GetStream()
+
+# Bucle para leer comandos del usuario y enviarlos al servidor
+while ($true) {
+    # Leer el comando ingresado por el usuario
+    $command = Read-Host "Ingrese un comando (o 'exit' para salir)"
+
+    # Salir si el comando es 'exit'
+    if ($command -eq "exit") {
+        break
+    }
+
+    # Enviar el comando al servidor
+    $writer = New-Object System.IO.StreamWriter $stream
+    $writer.WriteLine($command)
+    $writer.Flush()
+
+    # Leer la salida del comando ejecutado en el servidor y mostrarla en la máquina cliente
+    $output = ReadData_TCP $stream
+    Write-Output $output
+}
+
+# Cerrar la conexión y el cliente
+$stream.Close()
+$client.Close()
+
 

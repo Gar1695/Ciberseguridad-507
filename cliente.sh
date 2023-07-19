@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Cambiar la siguiente línea por la dirección IP de la máquina Windows (servidor)
-SERVER_IP="direccion_ip_máquina_windows"
+SERVER_IP="direccion_ip_maquina_windows"
 
 # Cambiar el siguiente puerto por el puerto en el que escucha el servidor en la máquina Windows
 SERVER_PORT=443
@@ -9,15 +9,11 @@ SERVER_PORT=443
 # Función para enviar y recibir datos con el servidor
 function communicate_with_server {
     # Establecer conexión con el servidor en la máquina Windows
-    exec 3<> /dev/tcp/"$SERVER_IP"/"$SERVER_PORT"
+    exec 3<>/dev/tcp/"$SERVER_IP"/"$SERVER_PORT"
 
-    # Función para enviar comando al servidor
+    # Función para enviar comando al servidor y recibir resultados
     function send_command {
         echo "$1" >&3
-    }
-
-    # Función para recibir resultados del servidor
-    function receive_results {
         cat <&3
     }
 
@@ -29,11 +25,9 @@ function communicate_with_server {
             break
         fi
 
-        # Enviar el comando al servidor
-        send_command "$command"
-
-        # Recibir y mostrar los resultados del servidor
-        receive_results
+        # Enviar el comando al servidor y recibir los resultados
+        result=$(send_command "$command")
+        echo "$result"
     done
 
     # Cerrar la conexión
@@ -42,3 +36,4 @@ function communicate_with_server {
 
 # Iniciar la comunicación con el servidor
 communicate_with_server
+

@@ -1,4 +1,5 @@
 # reverseshell-python-bash-ps1-batch
+⚠️ NOTA: Este contenido esta compartido con fines Éticos y esta creado para prácticar en Entornos Controlados sin dañar a terceras personas, en ningún momento se hace apología al uso de estos recursos para fines maliciosos.
 ## Instalación y Configuración
 Debemos tener en cuenta que para que funcione está reverse shell debemos instalar python3 en windows desde cmd o powershell, también al ejecutar el archivo victima.py el defender lo detectará y te dirá si quieres ejecutarlo.
 En este código solo debemos cambiar la dirección ip que aparece en el archivo atacante.py con la dirección de la victima.

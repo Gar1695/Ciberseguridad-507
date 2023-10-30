@@ -9,3 +9,8 @@ El archivo victima.bat es para ejecutar en la máquina windows, aún me falta me
 
 El archivo servidor.ps1 contiene un script sencillo para ejecutarlo en la máquina windows y con el archivo cliente.sh hacer la conexión desde la máquina kali. Con el archivo servidor.bat podemos ejecutar el script de manera más directa. Cabe destacar que al ejecutar el script victima.py o servidor.ps1 el antivirus o defender lo detectará y te preguntará si quieres ejecutarlo.
 Estos sencillos scripts le falta técnica de ofuscación y evasión mucho más complejas, pero es algo simple para ir empezando y comprendiendo.
+### Ejemplo:
+```
+pip install rarce
+```
+![imagen](https://github.com/Gar1695/Revershell-Python-ps1/blob/main/imagenes_github/reverse_shell_windows.png)
